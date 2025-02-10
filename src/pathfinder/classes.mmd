@@ -1,0 +1,65 @@
+classDiagram
+    class FileFinder {
+        -List~FileFilter~ filters
+        +search(String path): List~File~
+        +addFilter(FileFilter filter): FileFinder
+    }
+
+    class File {
+        -String name
+        -String path
+        -long size
+        -String extension
+        +getName(): String
+        +getPath(): String
+        +getSize(): long
+        +getExtension(): String
+    }
+
+    class FileFinderBuilder {
+        -FileFinder finder
+        +withExtension(String ext): FileFinderBuilder
+        +withMaxSize(long size): FileFinderBuilder
+        +withFilter(Date date): FileFinderBuilder
+        +build(): FileFinder
+    }
+
+    class Filter {
+        <<abstract>>
+        +match(File file)* boolean
+    }
+
+
+    class ExtensionFilter {
+        -String extension
+        +match(File file): boolean
+    }
+
+    class SizeFilter {
+        -long maxSize
+        -String operator
+        +match(File file): boolean
+    }
+
+    class CompositeFilter {
+        -List~Filter~ filters
+        +match(File file): boolean
+    }
+
+    class AndFilter {
+        -List~Filter~ filters
+        +match(File file): boolean
+    }
+
+    class OrFilter {
+        -List~Filter~ filters
+        +match(File file): boolean
+    }
+
+    FileFinder --> "0..*" FileFilter
+    FileFinderBuilder --> FileFinder
+    FileFilter <|-- ExtensionFilter
+    FileFilter <|-- SizeFilter
+    FileFilter <|-- CompositeFilter
+    CompositeFilter <|-- OrFilter
+    CompositeFilter <|-- AndFilter

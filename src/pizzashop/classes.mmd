@@ -1,0 +1,91 @@
+classDiagram
+
+    class Ingredient {
+        -String name
+        -double price
+        +getName(): String
+        +getPrice(): double
+    }
+
+    class Cheese {
+        -double price
+        +getPrice: double
+    }
+
+    class Ham {
+        -double price
+        +getPrice: double
+    }
+
+    class OrderItem {
+        <<abstract>>
+        +calculatePrice: double
+    }
+
+    class Pizza {
+        +calculatePrice: double
+    }
+
+    class Order {
+        -List~OrderItem~ items
+        +addItem(): void
+        +total(): double
+    }
+
+    class Wings {
+        +calculatePrice: double
+    }
+
+    class Base {
+        <<abstract>>
+        +price(): double
+    }
+
+    class Size {
+        -multiplier: double
+        +getMultiplier(): double
+    }
+
+    class RegularBase {
+        +price(): double
+    }
+
+    class PizzaBuilder {
+        -Pizza pizza
+        +withBase(Base base): PizzaBuilder
+        +withSize(Size size): PizzaBuilder
+        +withIngrident(Ingredient ingredient): PizzaBuilder
+        +build(): Pizza
+    }
+
+    class Discount {
+        <<abstract>>
+        +calculateAdjustment(): double
+    }
+
+    class PercentageDiscount {
+        +calculateAdjustment(): double
+    }
+
+    class BOGOCoupon {
+        +calculateAdjustment(): double
+    }
+
+    Order --> "0..*" OrderItem
+
+    OrderItem <|-- Pizza
+    OrderItem <|-- Wings
+
+    Order --> "0..*" Discount
+    Discount <|-- PercentageDiscount
+    Discount <|-- BOGOCoupon
+
+    Pizza --> "0..*" Ingredient
+    Ingredient <|-- Cheese
+    Ingredient <|-- Ham
+
+    Pizza -->  Base
+    Base <|-- RegularBase
+
+    Pizza --> Size
+    PizzaBuilder --> Pizza
